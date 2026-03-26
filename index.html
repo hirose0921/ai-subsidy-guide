@@ -146,6 +146,130 @@ footer { background:#1e293b; color:rgba(255,255,255,.45); text-align:center; pad
 footer a { color:rgba(255,255,255,.65); text-decoration:none; }
 footer a:hover { color:#7dd3fc; }
 
+/* ── MODAL ── */
+.modal-overlay {
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(15,23,42,.7);
+  backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  animation:fadeIn .3s ease;
+}
+.modal-overlay.hidden { display:none; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.modal-box {
+  background:#fff;
+  border-radius:20px;
+  max-width:680px;
+  width:100%;
+  max-height:88vh;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 24px 64px rgba(0,0,0,.3);
+  overflow:hidden;
+}
+
+.modal-head {
+  background:linear-gradient(135deg,#dc2626,#b91c1c);
+  padding:22px 28px;
+  flex-shrink:0;
+}
+.modal-head h2 {
+  color:#fff;
+  font-size:17px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:6px;
+}
+.modal-head p {
+  color:rgba(255,255,255,.85);
+  font-size:13px;
+  line-height:1.6;
+}
+
+.modal-body {
+  overflow-y:auto;
+  padding:24px 28px;
+  flex:1;
+}
+.modal-body::-webkit-scrollbar { width:6px; }
+.modal-body::-webkit-scrollbar-track { background:#f1f5f9; }
+.modal-body::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:3px; }
+
+.modal-item {
+  border-left:3px solid #dc2626;
+  background:#fef2f2;
+  border-radius:0 10px 10px 0;
+  padding:14px 16px;
+  margin-bottom:12px;
+}
+.modal-item h4 {
+  font-size:13.5px;
+  font-weight:700;
+  color:#991b1b;
+  margin-bottom:6px;
+}
+.modal-item p {
+  font-size:13px;
+  color:#7f1d1d;
+  line-height:1.75;
+}
+.modal-item ul {
+  padding-left:16px;
+  margin-top:6px;
+}
+.modal-item li {
+  font-size:13px;
+  color:#7f1d1d;
+  line-height:1.75;
+  margin-bottom:2px;
+}
+
+.modal-final {
+  background:#fff7ed;
+  border:1.5px solid #fed7aa;
+  border-radius:12px;
+  padding:16px 18px;
+  margin-top:4px;
+  font-size:13px;
+  color:#7c2d12;
+  line-height:1.75;
+}
+.modal-final strong { color:#92400e; }
+
+.modal-foot {
+  padding:18px 28px;
+  border-top:1px solid #e2e8f0;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  background:#f8fafc;
+}
+.modal-scroll-hint {
+  font-size:12px;
+  color:#94a3b8;
+  flex:1;
+}
+.modal-agree-btn {
+  background:linear-gradient(135deg,#dc2626,#b91c1c);
+  color:#fff;
+  border:none;
+  padding:12px 28px;
+  border-radius:100px;
+  font-family:'Noto Sans JP',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 4px 14px rgba(220,38,38,.4);
+  transition:opacity .2s,transform .2s;
+  white-space:nowrap;
+}
+.modal-agree-btn:hover { opacity:.9; transform:translateY(-1px); }
+
 @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
 
 @media(max-width:600px){
@@ -158,6 +282,132 @@ footer a:hover { color:#7dd3fc; }
 </style>
 </head>
 <body>
+
+<!-- ===== 注意喚起モーダル ===== -->
+<div class="modal-overlay hidden" id="warningModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>⚠️ 不正に関する重要な注意喚起</h2>
+      <p>本補助金の申請にあたっては、適正な申請および事業実施が求められます。不正または不適切と判断された場合、交付決定後であっても補助金の返還等の措置が取られる可能性があります。以下の内容をご確認のうえ、適正な申請をお願いいたします。</p>
+    </div>
+    <div class="modal-body" id="modalBody">
+
+      <div class="modal-item">
+        <h4>① 申請は必ず申請者自身が実施してください</h4>
+        <p>本補助金は、申請者ご自身が申請内容およびシステム情報を十分に理解・確認したうえで申請を行う必要があります。申請の代行は認められておりませんので、ご注意ください。<br>また、決算情報・従業員数・社内体制等について、事実と異なる内容での申請はできません。虚偽の情報を記載した場合は、虚偽申請として取り扱われる可能性があります。</p>
+      </div>
+
+      <div class="modal-item">
+        <h4>② 補助金受給のみを目的とした申請は禁止されています</h4>
+        <p>補助金を受け取ることのみを目的とした申請は認められていません。以下のような申請は不適切と判断される可能性があります。</p>
+        <ul>
+          <li>実態のないツール導入</li>
+          <li>導入後の活用計画がない申請</li>
+          <li>業務改善に資さない導入内容</li>
+        </ul>
+        <p style="margin-top:6px">申請内容が実際の業務改善に資するものとなっているか、必ずご確認ください。</p>
+      </div>
+
+      <div class="modal-item">
+        <h4>③ 実態のあるシステム導入が必要です</h4>
+        <p>交付決定後であっても、事務局による実地調査や証憑確認が行われる場合があります。以下の点について説明可能な内容となっている必要があります。</p>
+        <ul>
+          <li>導入の目的</li>
+          <li>活用方法</li>
+          <li>業務改善効果</li>
+          <li>導入後の運用体制</li>
+        </ul>
+        <p style="margin-top:6px">実態のない導入と判断された場合、不正とみなされる可能性があります。</p>
+      </div>
+
+      <div class="modal-item">
+        <h4>④ 補助対象経費の払い戻し（キックバック）は禁止されています</h4>
+        <p>補助対象経費の請求額に対して、以下のような行為は禁止されています。</p>
+        <ul>
+          <li>口座振込による払い戻し</li>
+          <li>現金による返金</li>
+          <li>値引き後に別途返金する行為</li>
+        </ul>
+        <p style="margin-top:6px">請求書記載金額と実際の支払金額は一致している必要があります。</p>
+      </div>
+
+      <div class="modal-item">
+        <h4>⑤ 第三者を介した資金還流は禁止されています</h4>
+        <p>以下のような行為は禁止されています。</p>
+        <ul>
+          <li>発注先と関係のない第三者からの資金提供</li>
+          <li>資金の還流を伴う商取引</li>
+          <li>実態のない金融取引</li>
+        </ul>
+        <p style="margin-top:6px">補助事業に関係のない資金のやり取りがある場合、不正と判断される可能性があります。</p>
+      </div>
+
+      <div class="modal-item">
+        <h4>⑥ 補助金等適正化法に違反する行為は禁止されています</h4>
+        <p>以下の行為は補助金等適正化法違反に該当する可能性があります。</p>
+        <ul>
+          <li>補助金の他用途への流用</li>
+          <li>虚偽報告</li>
+          <li>実態のない事業実施</li>
+        </ul>
+        <p style="margin-top:6px">また、過去に補助金等適正化法に違反している場合、申請が認められない可能性があります。</p>
+      </div>
+
+      <div class="modal-item">
+        <h4>⑦ 不正が確認された場合の対応について</h4>
+        <p>不正または実態不備が確認された場合、以下の措置が取られる可能性があります。</p>
+        <ul>
+          <li>補助金の返還</li>
+          <li>加算金の請求</li>
+          <li>申請の取り消し</li>
+          <li>今後の補助金申請の制限</li>
+        </ul>
+        <p style="margin-top:6px">必ず適正な申請および事業実施をお願いいたします。</p>
+      </div>
+
+      <div class="modal-item">
+        <h4>⑧ 購入設備の第三者貸与について</h4>
+        <p>補助対象として購入した設備は、申請者自身が占有し、事業の用に供することが前提です。以下のような利用は認められていません。</p>
+        <ul>
+          <li>特定の第三者への長期間貸与</li>
+          <li>申請者が使用しない設備導入</li>
+        </ul>
+        <p style="margin-top:6px">導入設備は自社で使用することが条件となります。</p>
+      </div>
+
+      <div class="modal-item">
+        <h4>⑨ 公序良俗・法令遵守について</h4>
+        <p>以下に該当する事業は対象外となります。</p>
+        <ul>
+          <li>公序良俗に反する事業</li>
+          <li>社会通念上不適切と認められる事業</li>
+          <li>法令違反または違反のおそれがある事業</li>
+          <li>消費者保護の観点から不適切な事業</li>
+        </ul>
+      </div>
+
+      <div class="modal-item">
+        <h4>⑩ 風俗営業等に該当する事業について</h4>
+        <p>以下に該当する事業は対象外となります。</p>
+        <ul>
+          <li>風俗営業等の規制及び業務の適正化等に関する法律第2条に該当する営業</li>
+          <li>店舗型性風俗特殊営業</li>
+        </ul>
+        <p style="margin-top:6px">ただし、旅館業法に基づき許可を受けた旅館業（店舗型性風俗特殊営業を除く）は対象となる場合があります。</p>
+      </div>
+
+      <div class="modal-final">
+        <strong>📋 最終確認のお願い</strong><br>
+        本補助金は、適正な事業実施を前提とした制度です。申請前に、上記内容をご確認いただき、適正な申請をお願いいたします。不明点がある場合は、必ず事前にご相談ください。
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <p class="modal-scroll-hint" id="scrollHint">↑ スクロールしてすべての内容をご確認ください</p>
+      <button class="modal-agree-btn" id="agreeBtn" onclick="closeModal()">内容を確認しました</button>
+    </div>
+  </div>
+</div>
 
 <header>
   <div class="header-badge">デジタル化・AI導入補助金</div>
@@ -861,6 +1111,26 @@ function switchTab(id, btn) {
 function toggleCard(id) {
   document.getElementById(id).classList.toggle('open');
 }
+
+// モーダル制御
+function closeModal() {
+  document.getElementById('warningModal').classList.add('hidden');
+  localStorage.setItem('warningAgreed', '1');
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  if (!localStorage.getItem('warningAgreed')) {
+    document.getElementById('warningModal').classList.remove('hidden');
+  }
+  // スクロール検知でヒント非表示
+  var body = document.getElementById('modalBody');
+  var hint = document.getElementById('scrollHint');
+  if (body && hint) {
+    body.addEventListener('scroll', function() {
+      if (body.scrollTop > 40) hint.style.opacity = '0';
+    });
+  }
+});
 </script>
 </body>
 </html>
